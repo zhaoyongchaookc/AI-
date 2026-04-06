@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>贷款测算整合工具</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Cadillac · Buick · 财政贴息</p>
+          <h1>贷款测算整合工具</h1>
+          <p class="lead">
+            统一选择车型、方案、期限，先算品牌方案，再叠加财政贴息，并输出逐月本金、利息、补贴与净支付明细。
+          </p>
+        </div>
+        <aside class="hero-panel card">
+          <label class="field">
+            <span>样例</span>
+            <select id="fixture"></select>
+          </label>
+          <div id="constraints" class="constraints"></div>
+        </aside>
+      </header>
+
+      <main class="grid">
+        <section class="card form-card">
+          <h2>方案输入</h2>
+          <form class="form-stack">
+            <section class="form-block form-block-new-car" aria-labelledby="form-block-new-car-title">
+              <h3 class="form-block-title" id="form-block-new-car-title">新车贷款</h3>
+              <div class="form-grid">
+                <label class="field">
+                  <span>品牌</span>
+                  <select id="brand"></select>
+                </label>
+                <label class="field">
+                  <span>申请主体</span>
+                  <select id="applicationType"></select>
+                </label>
+                <label class="field wide">
+                  <span>车型</span>
+                  <select id="model"></select>
+                </label>
+                <label class="field wide">
+                  <span>贷款方案</span>
+                  <select id="planKey"></select>
+                </label>
+                <label class="field">
+                  <span>贷款期限</span>
+                  <select id="term"></select>
+                </label>
+                <label class="field">
+                  <span>预计放款日期</span>
+                  <input id="disbursementDate" type="date" />
+                </label>
+                <label class="field">
+                  <span>车辆开票价</span>
+                  <input id="vehiclePrice" type="number" min="0" step="0.01" />
+                </label>
+                <label class="field">
+                  <span>总贷款金额（车贷+附加贷）</span>
+                  <input id="loanAmount" type="number" min="0" step="0.01" />
+                </label>
+                <label class="field">
+                  <span>车辆贷款金额</span>
+                  <input id="vehicleLoanAmount" type="number" min="0" step="0.01" />
+                </label>
+                <label class="field field-system-derived wide" id="vehicleDownPaymentRatioField" hidden>
+                  <span>车辆首付比例（按开票价与车贷推算）</span>
+                  <input id="vehicleDownPaymentRatio" type="number" min="0" max="1" step="0.0001" readonly />
+                </label>
+              </div>
+            </section>
+
+            <section class="form-block form-block-addon" aria-labelledby="form-block-addon-title">
+              <h3 class="form-block-title" id="form-block-addon-title">附加品贷款</h3>
+              <div class="form-grid">
+                <label class="field addon-field field-system-derived" data-addon-derived="purchaseTax">
+                  <span>购置税（系统计算）</span>
+                  <input id="purchaseTax" type="number" min="0" step="0.01" />
+                </label>
+                <label class="field addon-field field-system-derived" data-addon-derived="insuranceAmount">
+                  <span>保险预估（开票价 15%，系统计算）</span>
+                  <input id="insuranceAmount" type="number" min="0" step="0.01" />
+                </label>
+                <label class="field addon-field" data-addon-derived="otherAddOnAmount">
+                  <span>其他附加品</span>
+                  <input id="otherAddOnAmount" type="number" min="0" step="0.01" value="0" />
+                </label>
+                <label class="field">
+                  <span>附加项合计</span>
+                  <input id="addOnAmount" type="number" min="0" step="0.01" value="0" />
+                </label>
+                <label class="field">
+                  <span>附加品贷款金额</span>
+                  <input id="addOnLoanAmount" type="number" min="0" step="0.01" value="0" />
+                </label>
+              </div>
+            </section>
+
+            <label class="toggle form-toggle-wide">
+              <input id="enableFiscalSubsidy" type="checkbox" checked />
+              <span>启用财政贴息测算</span>
+            </label>
+          </form>
+          <div id="alerts" class="alerts"></div>
+        </section>
+
+        <section class="results">
+          <div id="summaryCards" class="summary-grid"></div>
+          <section class="card summary-card">
+            <h2>方案摘要</h2>
+            <div id="quoteSummary" class="quote-summary"></div>
+          </section>
+        </section>
+
+        <section class="card table-card wide-section">
+          <div class="table-header">
+            <h2>逐月还款明细</h2>
+            <p>本金、利息、品牌贴息、财政贴息、客户净支付按期展示。</p>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>期次</th>
+                  <th>日期</th>
+                  <th>当期应还总额</th>
+                  <th>本金</th>
+                  <th>利息</th>
+                  <th>品牌贴息</th>
+                  <th>财政贴息</th>
+                  <th>客户净支付</th>
+                  <th>期末剩余本金</th>
+                </tr>
+              </thead>
+              <tbody id="scheduleTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
