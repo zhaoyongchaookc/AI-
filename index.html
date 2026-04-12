@@ -8,12 +8,22 @@
   </head>
   <body>
     <div class="page-shell">
+      <div id="script-load-error" class="alert error" hidden style="margin-bottom: 1rem">
+        <strong>脚本或配置加载失败</strong>
+        <p style="margin: 8px 0 0; line-height: 1.5">
+          请在浏览器地址栏把 <code>index.html</code> 改成 <code>data/loan-config.js</code> 再访问；若显示 404，说明大配置文件未随仓库上传。请把本机生成的
+          <code>data/loan-config.js</code>（约 1.5MB）提交并推送到当前 GitHub Pages 使用的分支。
+        </p>
+      </div>
       <header class="hero">
         <div>
           <p class="eyebrow">Cadillac · Buick · 财政贴息</p>
           <h1>贷款测算整合工具</h1>
           <p class="lead">
             统一选择车型、方案、期限，先算品牌方案，再叠加财政贴息，并输出逐月本金、利息、补贴与净支付明细。
+          </p>
+          <p class="open-in-new-tab">
+            <a href="./" target="_blank" rel="noopener noreferrer">在新标签页打开本工具</a>
           </p>
         </div>
         <aside class="hero-panel card">
@@ -144,6 +154,20 @@
       </main>
     </div>
 
+    <script>
+      window.addEventListener(
+        "error",
+        function (e) {
+          var fn = String(e.filename || "");
+          var msg = String(e.message || "");
+          if (fn.indexOf("loan-config") !== -1 || msg.indexOf("loan-config") !== -1) {
+            var el = document.getElementById("script-load-error");
+            if (el) el.hidden = false;
+          }
+        },
+        true,
+      );
+    </script>
     <script type="module" src="./src/app.js"></script>
   </body>
 </html>

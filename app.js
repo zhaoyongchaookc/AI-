@@ -1,6 +1,18 @@
 import { loanConfig } from "../data/loan-config.js";
 import { getAvailableOptions, quoteLoan } from "./loan-engine.js";
 
+function showConfigError(message) {
+  const shell = document.querySelector(".page-shell");
+  if (!shell) {
+    return;
+  }
+  const div = document.createElement("div");
+  div.className = "alert error";
+  div.style.margin = "0 0 1rem";
+  div.innerHTML = `<strong>页面数据未就绪</strong><p style="margin:8px 0 0;line-height:1.5">${message}</p>`;
+  shell.prepend(div);
+}
+
 const DEFAULT_COMPUTED_DOWN_PAYMENT_RATIO = 0.2;
 
 const state = {
@@ -466,4 +478,10 @@ function init() {
   recalculate();
 }
 
-init();
+if (!loanConfig?.offers?.length) {
+  showConfigError(
+    "未读取到方案数据（<code>data/loan-config.js</code> 为空或未随仓库发布）。请在项目根目录运行 <code>python3 scripts/extract_config.py</code> 生成该文件，确认已 <strong>git push</strong> 到 GitHub Pages 所用分支，并检查仓库里是否存在约 1.5MB 的 <code>data/loan-config.js</code>。",
+  );
+} else {
+  init();
+}
